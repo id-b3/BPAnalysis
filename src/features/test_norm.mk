@@ -5,7 +5,7 @@ SHELL := bash
 .PHONY: all clean
 
 comma:=,
-P_LIST := $(subst $(comma), , $(PARAMS))
+P_LIST := $(subst $(comma), , $(PARAMS)) pack_years
 # CONDA_ACTIVATE=source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate ; conda activate
 
 all: hist
