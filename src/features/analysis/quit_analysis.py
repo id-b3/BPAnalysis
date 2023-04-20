@@ -64,7 +64,8 @@ for gender in ["MALE", "FEMALE"]:
     gender_df = df[df['gender'] == gender]
     # Loop over each parameter and calculate Pearson's correlation coefficient and R-squared
     for param in params:
-        df_param = gender_df.dropna(subset=[param, 'years_since_quit', 'pack_years'])
+        df_param = gender_df.dropna(
+            subset=[param, 'years_since_quit', 'pack_years'])
         df_param = df_param[df_param.smoking_status == 'ex_smoker']
         X = df_param[['years_since_quit', 'age_at_scan', 'pack_years']].values
         y = df_param[[param]].values
@@ -82,8 +83,20 @@ for gender in ["MALE", "FEMALE"]:
             'P-value': pval
         }
         results.append(result)
-        # sns.regplot(df_param, x="years_since_quit", y=param)
-        # plt.show()
+
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.regplot(x=df_param['years_since_quit'],
+                    y=model.predict(sm.add_constant(X)),
+                    scatter=False,
+                    ax=ax)
+        ax.set_ylim(df_param[param].min(), df_param[param].max())
+        ax.set_title(f"{gender} {param} with smoking cessation")
+        ax.set_xlabel("Duration of smoking cessation")
+        ax.set_ylabel(param)
+        plt.tight_layout()
+        fig.savefig(
+            f"./reports/figures/regression/smoking_cessation_{gender}_{param}.jpg",
+            dpi=300)
 
 # Create a pandas DataFrame from the results dictionary
 results_df = pd.DataFrame.from_dict(results)
