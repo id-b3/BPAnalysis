@@ -9,7 +9,7 @@ from data.util.subgroup import get_healthy, normalise_bps
 from features.descriptive import demographics, flowchart
 from features.comparative import smoking
 from models.linear import univariate, multivariate
-from visualization import violin
+from visualization import violin, regression
 
 runs = ["descriptive", "comparative", "regression", "clustering", "visualisation"]
 
@@ -54,7 +54,10 @@ def main(args):
             multivariate.fit_analyse(data, bps, out_path, True, logger) 
         ),
         runs[3]: lambda: (),
-        runs[4]: lambda: (violin.make_plots(data, bps, out_path)),
+        runs[4]: lambda: (
+            violin.make_plots(data, bps, out_path),
+            regression.make_plots(data, bps, out_path),
+        ),
     }
 
     # Run the analysis based on the desired run

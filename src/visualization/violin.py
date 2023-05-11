@@ -20,5 +20,5 @@ def make_plots(data, bps, out_path):
                                  "Female": "salmon"
                              })
         sns.despine(left=True)
-        fig.get_figure().savefig(f"{str(out_path / param)}.png", dpi=300)
+        fig.get_figure().savefig(f"{str(out_path / param)}_violin.png", dpi=300)
         plt.close()
