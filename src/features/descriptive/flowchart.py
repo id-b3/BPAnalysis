@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from src.data.util.constants import SCANS_PROCESSED
+from data.util.constants import SCANS_PROCESSED
 
 
 def make_chart(data: pd.DataFrame, out_path: Path):

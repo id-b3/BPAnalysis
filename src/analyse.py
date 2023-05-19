@@ -5,7 +5,7 @@ import logging.config
 import pandas as pd
 from pathlib import Path
 
-from data.util.subgroup import get_healthy, normalise_bps
+from data.util.dataframe import get_healthy, normalise_bps
 from features.descriptive import demographics, flowchart
 from features.comparative import smoking
 from models.linear import univariate, multivariate
@@ -40,24 +40,25 @@ def main(args):
 
     run_funcs = {
         runs[0]: lambda: (
-            demographics.calc_demographics(data, bps, out_path),
-            flowchart.make_chart(data, out_path),
+            demographics.calc_demographics(run_data, bps, out_path),
+            flowchart.make_chart(run_data, out_path),
         ),
-        runs[1]: lambda: (smoking.compare(data, bps, out_path)),
+        runs[1]: lambda: (smoking.compare(run_data, bps, out_path)),
         runs[2]: lambda: (
-            univariate.fit_analyse(data, bps, "length_at_scan", out_path),
-            univariate.fit_analyse(data, bps, "age_at_scan", out_path),
-            univariate.fit_analyse(data, bps, "weight_at_scan", out_path),
-            univariate.fit_analyse(data, bps, "bmi", out_path),
-            univariate.fit_analyse(data, bps, "pack_years", out_path),
-            multivariate.fit_analyse(data, bps, out_path, False, logger),
-            multivariate.fit_analyse(data, bps, out_path, True, logger) 
+            univariate.fit_analyse(run_data, bps, "length_at_scan", out_path),
+            univariate.fit_analyse(run_data, bps, "age_at_scan", out_path),
+            univariate.fit_analyse(run_data, bps, "weight_at_scan", out_path),
+            univariate.fit_analyse(run_data, bps, "bmi", out_path),
+            univariate.fit_analyse(run_data, bps, "pack_years", out_path),
+            multivariate.fit_analyse(run_data, bps, out_path, False, logger),
+            multivariate.fit_analyse(run_data, bps, out_path, True, logger),
         ),
         runs[3]: lambda: (),
         runs[4]: lambda: (
-            violin.make_plots(data, bps, out_path),
-            regression.make_plots(data, bps, out_path),
-            percentile.make_plots(data, bps, out_path),
+            percentile.make_plots(run_data, bps, out_path),
+            violin.make_plots(run_data, bps, out_path),
+            # NB - this normalises the BPs from 0-1 in the run_data dataframe
+            regression.make_plots(run_data, bps, out_path),
         ),
     }
 
@@ -66,6 +67,7 @@ def main(args):
         logger.info(f"Running {run} analysis...")
         out_path = main_out_dir / run
         out_path.mkdir(parents=True, exist_ok=True)
+        run_data = data.copy()
         run_funcs[run]()
 
 

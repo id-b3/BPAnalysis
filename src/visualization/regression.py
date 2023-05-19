@@ -6,16 +6,13 @@ import matplotlib.pyplot as plt
 import statsmodels.formula.api as smf
 import scipy.stats as stats
 
+from data.util.dataframe import min_max_scale
+
 
 def make_plots(data, bps, out_path):
 
     sns.set_theme(style="whitegrid")
     fit_tests = []
-
-    # Normalisation
-    def min_max_scale(data, param):
-        data[param] = (data[param] - data[param].min()) / (data[param].max() - data[param].min())
-        return data
 
     data = min_max_scale(data, "age_at_scan")
 

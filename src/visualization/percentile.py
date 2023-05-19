@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import argparse
-from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -53,8 +51,6 @@ def make_plots(data, bps, out_path):
                     .quantile([0.1, 0.3, 0.5, 0.7, 0.9])
                     .reset_index()
                 )
-                # TODO fix this
-                breakpoint()
                 percentiles = percentiles.rename(columns={"level_1": "Percentile"})
                 percentiles.Percentile = percentiles["Percentile"].apply(
                     lambda x: f"{x * 100:.0f}%"
@@ -68,13 +64,15 @@ def make_plots(data, bps, out_path):
                     scatter=False,
                     truncate=False,
                     palette=sns.color_palette(
-                        ["red", "orange", "green", "orange", "red"]
+                        ["deepskyblue", "mediumseagreen", "green", "orange", "red"]
                     ),
                     ci=None,
-                    order=2,
-                    # robust=True,
+                    # order=2,
+                    robust=True,
                     line_kws={"alpha": 0.5},
                 )
+
+                sns.move_legend(fig, "lower center", bbox_to_anchor=(0.5, 1.0), ncol=5, title=None, frameon=False)
 
                 # Additional customization of the x-axis
                 plt.xlabel("Age")
