@@ -9,7 +9,7 @@ from data.util.subgroup import get_healthy, normalise_bps
 from features.descriptive import demographics, flowchart
 from features.comparative import smoking
 from models.linear import univariate, multivariate
-from visualization import violin, regression
+from visualization import violin, regression, percentile
 
 runs = ["descriptive", "comparative", "regression", "clustering", "visualisation"]
 
@@ -57,6 +57,7 @@ def main(args):
         runs[4]: lambda: (
             violin.make_plots(data, bps, out_path),
             regression.make_plots(data, bps, out_path),
+            percentile.make_plots(data, bps, out_path),
         ),
     }
 
