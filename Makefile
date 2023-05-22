@@ -26,11 +26,25 @@ STUDY_HEALTHY ?= true
 NORMALISE_DATA ?= true
 
 # Params to analyse
-PARAMS:=bp_pi10,bp_afd,bp_tcount,bp_wt_avg,bp_la_avg,bp_wap_avg,bp_airvol
+PARAMS:=bp_pi10,bp_tcount,bp_wt_avg,bp_la_avg,bp_wap_avg
 PYTHONPATH=$(CURDIR)
+
+# Report Path
+REPORTS:=./reports/
 
 export PYTHONPATH
 export DPRC BP_FINAL PARAMS STUDY_HEALTHY
+
+#################################################################################
+# FLAGS                                                                         #
+#################################################################################
+ifeq ($(STUDY_HEALTHY),true)
+	HEALTHY_FLAG=--healthy
+endif
+
+ifeq ($(NORMALISE_DATA),true)
+	NORMALISE_FLAG=--normalise
+endif
 
 #################################################################################
 # COMMANDS                                                                      #
@@ -43,19 +57,19 @@ requirements: test_environment
 ## Make Dataset
 data: ; $(MAKE) -f ./src/data/make_data.mk -C $(PROJECT_DIR)
 
-run_study: data_describe data_visualise data_analyse data_model
+run_study: test_norm data_describe data_visualise data_analyse data_model
 
 ## Summary of every variable in the dataset
-data_describe: ; $(MAKE) -f ./src/features/describe.mk -C $(PROJECT_DIR)
+data_describe: ; ./src/analyse.py $(BP_FINAL) $(PARAMS) $(REPORTS) $(HEALTHY_FLAG) $(NORMALISE_FLAG) --to_run descriptive
 
 ## Create Figures
-data_visualise: ; $(MAKE) -f ./src/visualization/make_plots.mk -C $(PROJECT_DIR)
+data_visualise: ; ./src/analyse.py $(BP_FINAL) $(PARAMS) $(REPORTS) $(HEALTHY_FLAG) $(NORMALISE_FLAG) --to_run visualisation
 
-data_analyse:
-	$(MAKE) -f ./src/features/analyse.mk -C $(PROJECT_DIR)
+## Run the comparative analysis
+data_analyse: ; ./src/analyse.py $(BP_FINAL) $(PARAMS) $(REPORTS) $(HEALTHY_FLAG) $(NORMALISE_FLAG) --to_run comparative
 
-data_model:
-	$(MAKE) -f ./src/models/model.mk -C $(PROJECT_DIR)
+## Build and evaluate models
+data_model: ; ./src/analyse.py $(BP_FINAL) $(PARAMS) $(REPORTS) $(HEALTHY_FLAG) $(NORMALISE_FLAG) --to_run regression clustering
 
 ## Test the variables for normality
 test_norm: ; $(MAKE) -f ./src/features/test_norm.mk -C $(PROJECT_DIR)
