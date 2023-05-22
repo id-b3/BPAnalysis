@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 from scipy.stats import pearsonr
 import statsmodels.api as sm
+from data.util.dataframe import min_max_scale
 
 
 def fit_analyse(data: pd.DataFrame, bps: list, i_var: str, out_path: Path):
@@ -25,18 +26,20 @@ def fit_analyse(data: pd.DataFrame, bps: list, i_var: str, out_path: Path):
 
     results = []
 
+    data = min_max_scale(data, ["age_at_scan","length_at_scan","weight_at_scan","bmi"] + bps)
+
     for gender in ["Male", "Female"]:
-        gender_data = data[data["gender"] == gender]
+        gender_data = data[data["gender"] == gender].copy()
 
         # Loop parameters and calculate Pearson's cc and R-squared
         for param in bps:
-            for group in data["smoking_status"].unique():
+            for group in gender_data["smoking_status"].unique():
                 data_param = gender_data.dropna(subset=[param, i_var])
                 data_param = data_param[data_param.smoking_status == group]
                 print(f"Calculating {param} wrt {i_var} for {gender} {group}")
-                X = data_param[[i_var]].values
-                y = data_param[[param]].values
-                pearson, _ = pearsonr(X.T[0], y.T[0])
+                X = data_param[i_var].to_numpy()
+                y = data_param[param].to_numpy()
+                pearson, _ = pearsonr(X, y)
                 model = sm.OLS(y, sm.add_constant(X)).fit()
                 rsquared = model.rsquared
                 pval = round(model.pvalues[1], 4)

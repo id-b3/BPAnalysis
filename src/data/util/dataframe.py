@@ -75,7 +75,36 @@ def prettify_names(name: str) -> str:
     except TypeError as error:
         print(error)
 
-# Min-max Normalisation
-def min_max_scale(data, param):
-    data[param] = (data[param] - data[param].min()) / (data[param].max() - data[param].min())
+import pandas as pd
+
+def min_max_scale(data: pd.DataFrame, params: list) -> pd.DataFrame:
+    """
+    Min-max normalization is a commonly used method to normalize data. It scales the data between the range of 0 and 1
+    by subtracting the minimum value of the feature and dividing by the range of the feature (maximum value - minimum value).
+    
+    Parameters:
+    data (pd.DataFrame): The input data that needs to be normalized. 
+    params (list): The list of feature columns which needs to be normalized.
+    
+    Returns:
+    pd.DataFrame: The normalized input data with the same dimensions as the input data.
+    
+    Raises:
+    TypeError: If any of the input parameters' data types are not as expected.
+    ValueError: If there are any invalid values in the input data.
+    
+    Example usage: 
+    data = pd.read_csv('data.csv')
+    params = ['age', 'income']
+    normalized_data = min_max_scale(data, params)
+    """
+    if not isinstance(data, pd.DataFrame):
+        raise TypeError("Data must be a pandas dataframe")
+    if not isinstance(params, list):
+        raise TypeError("Params must be a list of feature columns")
+    for param in params:
+        if param not in data.columns:
+            raise ValueError("Invalid parameter name: " + param)
+    for param in params:
+        data[param] = (data[param] - data[param].min()) / (data[param].max() - data[param].min())
     return data

@@ -40,25 +40,25 @@ def main(args):
 
     run_funcs = {
         runs[0]: lambda: (
-            demographics.calc_demographics(run_data, bps, out_path),
-            flowchart.make_chart(run_data, out_path),
+            demographics.calc_demographics(data.copy(deep=True), bps, out_path),
+            flowchart.make_chart(data.copy(deep=True), out_path),
         ),
-        runs[1]: lambda: (smoking.compare(run_data, bps, out_path)),
+        runs[1]: lambda: (smoking.compare(data.copy(deep=True), bps, out_path)),
         runs[2]: lambda: (
-            univariate.fit_analyse(run_data, bps, "length_at_scan", out_path),
-            univariate.fit_analyse(run_data, bps, "age_at_scan", out_path),
-            univariate.fit_analyse(run_data, bps, "weight_at_scan", out_path),
-            univariate.fit_analyse(run_data, bps, "bmi", out_path),
-            univariate.fit_analyse(run_data, bps, "pack_years", out_path),
-            multivariate.fit_analyse(run_data, bps, out_path, False, logger),
-            multivariate.fit_analyse(run_data, bps, out_path, True, logger),
+            univariate.fit_analyse(data.copy(deep=True), bps, "length_at_scan", out_path),
+            univariate.fit_analyse(data.copy(deep=True), bps, "age_at_scan", out_path),
+            univariate.fit_analyse(data.copy(deep=True), bps, "weight_at_scan", out_path),
+            univariate.fit_analyse(data.copy(deep=True), bps, "bmi", out_path),
+            univariate.fit_analyse(data.copy(deep=True), bps, "pack_years", out_path),
+            multivariate.fit_analyse(data.copy(deep=True), bps, out_path, False, logger),
+            multivariate.fit_analyse(data.copy(deep=True), bps, out_path, True, logger),
         ),
         runs[3]: lambda: (),
         runs[4]: lambda: (
-            percentile.make_plots(run_data, bps, out_path),
-            violin.make_plots(run_data, bps, out_path),
-            # NB - this normalises the BPs from 0-1 in the run_data dataframe
-            regression.make_plots(run_data, bps, out_path),
+            percentile.make_plots(data.copy(deep=True), bps, out_path),
+            violin.make_plots(data.copy(deep=True), bps, out_path),
+            # NB - this normalises the BPs from 0-1 in the data.copy(deep=True) dataframe
+            regression.make_plots(data.copy(deep=True), bps, out_path),
         ),
     }
 
@@ -67,7 +67,6 @@ def main(args):
         logger.info(f"Running {run} analysis...")
         out_path = main_out_dir / run
         out_path.mkdir(parents=True, exist_ok=True)
-        run_data = data.copy()
         run_funcs[run]()
 
 
