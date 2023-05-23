@@ -41,7 +41,7 @@ def main(args):
     run_funcs = {
         runs[0]: lambda: (
             demographics.calc_demographics(data.copy(deep=True), bps, out_path),
-            flowchart.make_chart(data.copy(deep=True), out_path),
+            flowchart.make_chart(data_all.copy(deep=True), out_path),
         ),
         runs[1]: lambda: (smoking.compare(data.copy(deep=True), bps, out_path)),
         runs[2]: lambda: (
@@ -57,7 +57,6 @@ def main(args):
         runs[4]: lambda: (
             percentile.make_plots(data.copy(deep=True), bps, out_path),
             violin.make_plots(data.copy(deep=True), bps, out_path),
-            # NB - this normalises the BPs from 0-1 in the data.copy(deep=True) dataframe
             regression.make_plots(data.copy(deep=True), bps, out_path),
         ),
     }
