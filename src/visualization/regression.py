@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 
 from data.util.dataframe import min_max_scale
+from .prettifiers import prettify_axes
 
 logger = logging.getLogger("BronchialParameters")
 
@@ -56,24 +57,27 @@ def make_plots(data: pd.DataFrame, bps: list, out_path: Path):
             logger.debug("Pearson for {} and {}: {}".format(var, param, r))
             sns.despine(left=True)
             fig.set(ylim=(0, 1))
+            prettify_axes(fig)
             fig.fig.savefig(f"{str(out_path / param)}_{var}_regression.png",
                             dpi=300)
             plt.close()
-            fig = sns.lmplot(
+
+            fig2 = sns.lmplot(
                 data=data_reg,
                 x=var,
                 y=param,
                 hue="gender",
                 palette=sns.color_palette([
-                    "salmon", "blue"
+                    "salmon", "lightblue"
                 ]),
                 truncate=False,
                 scatter=True,
                 scatter_kws={"alpha": 0.3},
             )
             sns.despine(left=True)
-            fig.set(ylim=(0, 1))
-            fig.fig.savefig(
+            fig2.set(ylim=(0, 1))
+            prettify_axes(fig2)
+            fig2.fig.savefig(
                 f"{str(out_path / param)}_{var}_gender_regression.png",
                 dpi=300)
             plt.close()

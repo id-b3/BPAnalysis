@@ -5,6 +5,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from .prettifiers import prettify_axes
+
 
 def make_plots(data, bps, out_path):
     out_path = out_path / "percentile"
@@ -74,6 +76,8 @@ def make_plots(data, bps, out_path):
                     robust=True,
                     line_kws={"alpha": 0.5},
                 )
+
+                prettify_axes(fig)
 
                 sns.move_legend(fig,
                                 "lower center",

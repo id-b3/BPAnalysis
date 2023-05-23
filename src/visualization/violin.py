@@ -3,6 +3,8 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from .prettifiers import prettify_axes
+
 
 def make_plots(data, bps, out_path):
     out_path = out_path / "violin"
@@ -22,5 +24,6 @@ def make_plots(data, bps, out_path):
                                  "Female": "salmon"
                              })
         sns.despine(left=True)
+        prettify_axes(fig)
         fig.get_figure().savefig(f"{str(out_path / param)}_violin.png", dpi=300)
         plt.close()
