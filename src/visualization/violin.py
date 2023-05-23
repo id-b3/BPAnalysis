@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 
 def make_plots(data, bps, out_path):
+    out_path = out_path / "violin"
+    out_path.mkdir(parents=True, exist_ok=True)
 
     sns.set_theme(style="whitegrid")
     for param in bps:
