@@ -10,7 +10,10 @@ DINT=./data/interim/
 # RAW Data
 SPSS_FILES=1a_q_1.sav 1b_q_1.sav 1c_q_1.sav 1a_v_1.sav 2a_q_2.sav 2b_q_1.sav 2a_v_1.sav
 IMA_CSV=imalife_participant_data.csv
+CT_CSV=imalife_ct_review_data.csv
 SEG_CSV=final_bp_list.csv
+TAC_CSV=filtered_tac.csv
+
 VAR_FILTER=$(VPATH)variable_filter_list.txt
 
 # Interim Data
@@ -36,7 +39,7 @@ $(BP_FILT_CSV): $(MRG_CSV)
 	< $< csvcut -c $(DB_COLS) > $@
 
 # Merge all CSV files into one using the patientID as an index
-$(MRG_CSV): $(SPLT_CSV) $(CSV_FILES) $(IMA_CSV)
+$(MRG_CSV): $(SPLT_CSV) $(CSV_FILES) $(IMA_CSV) $(CT_CSV) $(TAC_CSV)
 	csvjoin --left -c patientID $^ > $@
 
 # Expand the semicolon delim'd bps and change participant_id to patientID

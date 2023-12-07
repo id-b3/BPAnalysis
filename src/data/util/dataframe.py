@@ -24,6 +24,17 @@ def get_group(df, group: str="healthy"):
 
     if group == "healthy":
         df_group = df[healthy_mask]
+        print("Total healthy: ", len(df_group))
+        print("ILD: ", len(df_group[df_group.ild_signs]))
+        df_group = df_group[~df_group.ild_signs]
+        print("Emphysema: ", len(df_group[df_group.emphysema_signs]))
+        df_group = df_group[~df_group.emphysema_signs]
+        print("Abnormal bronchi: ", len(df_group[df_group.bronchi_signs]))
+        df_group = df_group[~df_group.bronchi_signs]
+        print("Infection: ", len(df_group[df_group.infection_signs]))
+        df_group = df_group[~df_group.infection_signs]
+        print("Total healthy without CT signs: ", len(df_group))
+
     elif group == "unhealthy":
         df_group = df[~healthy_mask]
         df_group = df_group.dropna(subset=["sex"])

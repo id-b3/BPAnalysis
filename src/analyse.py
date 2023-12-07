@@ -18,7 +18,7 @@ group_opts = ["age_5yr", "age_10yr", "smoking_status"]
 demo_params = [
     'age', 'height', 'weight', 'bp_tlv', 'pack_years',
     'fev1', 'fev1_pp', 'fvc', 'fev1_fvc', 'bp_pi10', 'bp_wap_avg', 'bp_la_avg',
-    'bp_wt_avg', 'bp_afd', 'bp_tcount', 'bp_airvol'
+    'bp_wt_avg'
 ]
 # Whether to scale all parameters to [0, 1] before plotting/regression
 min_max_params = False
@@ -55,7 +55,6 @@ def main(args):
     else:
         main_out_dir = main_out_dir / "not-normalised"
 
-
     run_funcs = {
         runs[0]:
         lambda: (
@@ -90,6 +89,7 @@ def main(args):
             regression.make_plots(data.copy(deep=True), bps, out_path, min_max_params),
         ),
     }
+
 
     # Run the analysis based on the desired run
     for run in args.to_run:
